@@ -1,4 +1,5 @@
 use std::path::PathBuf;
+use log::LevelFilter;
 use structopt::StructOpt;
 
 #[derive(Debug, StructOpt)]
@@ -18,7 +19,19 @@ pub struct Opt{
     pub mount_dir: PathBuf,
 
 }
+#[inline(always)]
+pub fn setup_log(level : LevelFilter){
+    env_logger::Builder::from_default_env()
+        .format_timestamp_secs()
+        .filter(None, level)
+        .init();
+}
 pub fn parse_args() -> Opt{
-        let args  = Opt::from_args();
-        args 
+        let args  = Opt::from_args();   
+        if args.debug{
+            setup_log(LevelFilter::Debug);
+        }else {
+            setup_log(LevelFilter::Info)
+        }
+        args
     }
