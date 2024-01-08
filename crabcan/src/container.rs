@@ -44,7 +44,7 @@ pub fn start(args:Opt) -> Result<() , Err>{
 pub const MINIMAL_KERNAL_VERSION: f32 = 4.8;
 pub fn check_linux_ver() -> Result<(), Err>{
         let host =  uname();
-        log::debug!("linux Release" , host.release());
+        log::debug!("linux Release: {}" , host.release());
         if let Ok(version) = scan_fmt!(host.release(), "{f}.{}" , f32){
             if version < MINIMAL_KERNAL_VERSION {
                 return Err(Err::NotSupported(0));
