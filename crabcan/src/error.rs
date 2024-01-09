@@ -34,7 +34,8 @@ pub fn exit_returncode(res : Result<(), Err>) {
 pub enum Err{
     ArgumentInvalid(&'static str),
     ContainerError(u8),
-    NotSupported(u8)
+    NotSupported(u8),
+    SocketError(u8)
 }
 impl Err{
     //translate an error code::X into a number to return {the UNIX way}

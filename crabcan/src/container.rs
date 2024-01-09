@@ -2,7 +2,7 @@ use crate::cli::Opt;
 use crate::error::Err;
 use crate::config::Containeropts;
 use nix::sys::utsname::uname;
-
+#[allow(dead_code)]
 pub struct Container{
     config:Containeropts,
 }
