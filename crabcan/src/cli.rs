@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 use log::LevelFilter;
 use structopt::StructOpt;
-use crate::error::Err;
+use crate::error::Ourerror;
 
 #[derive(Debug, StructOpt)]
 #[structopt(name = "Crabcan", about = "Container in rust")]
@@ -27,7 +27,7 @@ pub fn setup_log(level : LevelFilter){
         .filter(None, level)
         .init();
 }
-pub fn parse_args() -> Result<Opt , Err>{
+pub fn parse_args() -> Result<Opt , Ourerror>{
         let args  = Opt::from_args();   
         if args.debug{
             setup_log(LevelFilter::Debug);
@@ -35,7 +35,7 @@ pub fn parse_args() -> Result<Opt , Err>{
             setup_log(LevelFilter::Info)
         }
         if !args.mount_dir.exists() || !args.mount_dir.is_dir(){
-            return Err(Err::ArgumentInvalid("mount"));
+            return Err(Ourerror::ArgumentInvalid("mount"));
         }
         Ok(args)
     }

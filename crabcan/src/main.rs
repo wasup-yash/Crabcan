@@ -2,6 +2,8 @@ pub mod cli;
 pub mod error;
 pub mod config;
 pub mod container;
+pub mod ipc;
+pub mod child;
 use std::process::exit;
 use error::exit_returncode;
 #[macro_use] extern crate scan_fmt;
