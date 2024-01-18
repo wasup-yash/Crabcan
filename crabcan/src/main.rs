@@ -3,6 +3,7 @@ pub mod cli;
 pub mod config;
 pub mod container;
 pub mod error;
+pub mod hostname;
 pub mod ipc;
 use error::exit_returncode;
 use std::process::exit;

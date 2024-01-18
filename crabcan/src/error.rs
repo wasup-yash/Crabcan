@@ -37,6 +37,8 @@ pub enum Ourerror {
     NotSupported(u8),
     SocketError(u8),
     ChildProcessError(u8),
+    HostnameError(u8),
+    RngError,
 }
 impl Ourerror {
     //translate an error code::X into a number to return {the UNIX way}

@@ -1,7 +1,6 @@
 use crate::child::generate_child_process;
 use crate::cli::Opt;
 use crate::config::Containeropts;
-use crate::container;
 use crate::error::Ourerror;
 use nix::sys::utsname::uname;
 use nix::sys::wait::waitpid;
