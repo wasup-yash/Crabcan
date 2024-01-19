@@ -10,18 +10,13 @@ pub fn generate_hostname() -> Result<String, Ourerror> {
     let adj = HOSTNAME_ADJ.choose(&mut rng).ok_or(Ourerror::RngError)?;
     Ok(format!("{}-{}-{}", adj, name, num))
 }
-const HOSTNAME_NAMES: [&'static str; 8] = [
-    "cat", "world", "coffee", "girl", "man", "book", "pinguin", "moon",
-];
-const HOSTNAME_ADJ: [&'static str; 16] = [
+const HOSTNAME_NAMES: [&'static str; 6] = ["world", "coffee", "man", "book", "pinguin", "moon"];
+const HOSTNAME_ADJ: [&'static str; 12] = [
     "blue",
     "red",
     "green",
     "yellow",
-    "big",
-    "small",
     "tall",
-    "thin",
     "round",
     "square",
     "triangular",
@@ -29,7 +24,6 @@ const HOSTNAME_ADJ: [&'static str; 16] = [
     "noisy",
     "silent",
     "soft",
-    "irregular",
 ];
 
 pub fn set_container_hostname(hostname: &String) -> Result<(), Ourerror> {
