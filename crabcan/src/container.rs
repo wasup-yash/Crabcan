@@ -7,6 +7,7 @@ use nix::sys::wait::waitpid;
 use nix::unistd::close;
 use nix::unistd::Pid;
 use std::os::unix::io::RawFd;
+use crate::mount::clean_mounts;
 #[allow(dead_code)]
 pub struct Container {
     config: Containeropts,
@@ -36,6 +37,7 @@ impl Container {
             log::error!("Unable to close write sockets: {:?} ", e);
             return Err(Ourerror::SocketError(3));
         }
+        clean_mounts(&self.config.mount_dir)?;
         if let Err(e) = close(self.sockets.1) {
             log::error!("Unable to close read sockets: {:?} ", e);
             return Err(Ourerror::SocketError(4));

@@ -39,6 +39,7 @@ pub enum Ourerror {
     ChildProcessError(u8),
     HostnameError(u8),
     RngError,
+    MountError(u8),
 }
 impl Ourerror {
     //translate an error code::X into a number to return {the UNIX way}
