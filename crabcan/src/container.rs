@@ -2,12 +2,12 @@ use crate::child::generate_child_process;
 use crate::cli::Opt;
 use crate::config::Containeropts;
 use crate::error::Ourerror;
+use crate::mount::clean_mounts;
 use nix::sys::utsname::uname;
 use nix::sys::wait::waitpid;
 use nix::unistd::close;
 use nix::unistd::Pid;
 use std::os::unix::io::RawFd;
-use crate::mount::clean_mounts;
 #[allow(dead_code)]
 pub struct Container {
     config: Containeropts,
