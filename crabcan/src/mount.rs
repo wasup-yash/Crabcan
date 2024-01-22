@@ -1,6 +1,6 @@
 use crate::error::Ourerror;
 use nix::mount::{mount, MsFlags};
-use nix::unistd::pivot_root;
+use nix::unistd::{chdir, pivot_root};
 use rand::Rng;
 use std::fs::create_dir_all;
 use std::path::PathBuf;
@@ -50,6 +50,14 @@ pub fn setmountpoint(mount_dir: &PathBuf) -> Result<(), Ourerror> {
     if let Err(_) = pivot_root(&new_root, &put_old) {
         return Err(Ourerror::MountError(4));
     }
+    log::debug!("Unmounting old root");
+    let old_root = PathBuf::from(format!("/{}", old_root_tail));
+    // Ensure we are not inside the directory we want to umount
+    if let Err(_) = chdir(&PathBuf::from("/")) {
+        return Err(Ourerror::MountError(5));
+    }
+    unmount_path(&old_root)?;
+    delete_dir(&old_root)?;
     Ok(())
 }
 
@@ -82,6 +90,31 @@ pub fn mount_directory(
                 log::error!("Cannot remount {} : {}", mount_point.to_str().unwrap(), e);
             }
             Err(Ourerror::MountError(3))
+        }
+    }
+}
+
+use nix::mount::{umount2, MntFlags};
+pub fn unmount_path(path: &PathBuf) -> Result<(), Ourerror> {
+    match umount2(path, MntFlags::MNT_DETACH) {
+        Ok(_) => Ok(()),
+        Err(e) => {
+            log::error!("Unable to umount {}: {}", path.to_str().unwrap(), e);
+            Err(Ourerror::MountError(0))
+        }
+    }
+}
+use std::fs::remove_dir;
+pub fn delete_dir(path: &PathBuf) -> Result<(), Ourerror> {
+    match remove_dir(path.as_path()) {
+        Ok(_) => Ok(()),
+        Err(e) => {
+            log::error!(
+                "Unable to delete directory {}: {}",
+                path.to_str().unwrap(),
+                e
+            );
+            Err(Ourerror::MountError(1))
         }
     }
 }
