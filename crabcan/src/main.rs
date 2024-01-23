@@ -6,6 +6,7 @@ pub mod error;
 pub mod hostname;
 pub mod ipc;
 pub mod mount;
+pub mod namespace;
 use error::exit_returncode;
 use std::process::exit;
 #[macro_use]
