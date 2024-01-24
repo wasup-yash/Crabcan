@@ -3,6 +3,7 @@ use crate::cli::Opt;
 use crate::config::Containeropts;
 use crate::error::Ourerror;
 use crate::mount::clean_mounts;
+use crate::namespace::handle_child_uid_mp;
 use nix::sys::utsname::uname;
 use nix::sys::wait::waitpid;
 use nix::unistd::close;
@@ -27,6 +28,7 @@ impl Container {
 
     pub fn create(&mut self) -> Result<(), Ourerror> {
         let pid = generate_child_process(self.config.clone())?;
+        handle_child_uid_mp(pid, self.sockets.0)?;
         self.child_pid = Some(pid);
         log::debug!("Creation of container Finished");
         Ok(())
