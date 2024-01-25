@@ -1,3 +1,4 @@
+pub mod cap;
 pub mod child;
 pub mod cli;
 pub mod config;

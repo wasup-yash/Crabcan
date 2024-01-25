@@ -1,3 +1,4 @@
+use crate::cap::setcapabilities;
 use crate::config::Containeropts;
 use crate::error::Ourerror;
 use crate::hostname::set_container_hostname;
@@ -54,5 +55,6 @@ fn set_container_configuration(config: &Containeropts) -> Result<(), Ourerror> {
     set_container_hostname(&config.hostname)?;
     setmountpoint(&config.mount_dir)?;
     userns(config.fd, config.uid)?;
+    setcapabilities()?;
     Ok(())
 }
