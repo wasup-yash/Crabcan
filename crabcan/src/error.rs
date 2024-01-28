@@ -42,6 +42,7 @@ pub enum Ourerror {
     MountError(u8),
     NamespacesError(u8),
     CapabilitiesError(u8),
+    SyscallsError(u8),
 }
 impl Ourerror {
     //translate an error code::X into a number to return {the UNIX way}
