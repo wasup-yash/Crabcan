@@ -9,6 +9,7 @@ pub mod ipc;
 pub mod mount;
 pub mod namespace;
 pub mod syscall;
+pub mod resources;
 use error::exit_returncode;
 use std::process::exit;
 #[macro_use]

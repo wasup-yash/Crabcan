@@ -9,6 +9,7 @@ use nix::sys::wait::waitpid;
 use nix::unistd::close;
 use nix::unistd::Pid;
 use std::os::unix::io::RawFd;
+use crate::resources::restrict_resources;
 #[allow(dead_code)]
 pub struct Container {
     config: Containeropts,
@@ -28,6 +29,7 @@ impl Container {
 
     pub fn create(&mut self) -> Result<(), Ourerror> {
         let pid = generate_child_process(self.config.clone())?;
+        restrict_resources(&self.config.hostname, pid)?;
         handle_child_uid_mp(pid, self.sockets.0)?;
         self.child_pid = Some(pid);
         log::debug!("Creation of container Finished");
