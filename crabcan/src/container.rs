@@ -10,6 +10,7 @@ use nix::unistd::close;
 use nix::unistd::Pid;
 use std::os::unix::io::RawFd;
 use crate::resources::restrict_resources;
+use crate::resources::clean_cgroups;
 #[allow(dead_code)]
 pub struct Container {
     config: Containeropts,
@@ -29,7 +30,7 @@ impl Container {
 
     pub fn create(&mut self) -> Result<(), Ourerror> {
         let pid = generate_child_process(self.config.clone())?;
-        restrict_resources(&self.config.hostname, pid)?;
+        restrict_resources(&self.config.hostname, &pid)?;
         handle_child_uid_mp(pid, self.sockets.0)?;
         self.child_pid = Some(pid);
         log::debug!("Creation of container Finished");
@@ -45,6 +46,10 @@ impl Container {
         if let Err(e) = close(self.sockets.1) {
             log::error!("Unable to close read sockets: {:?} ", e);
             return Err(Ourerror::SocketError(4));
+        }
+        if let Err(e) = clean_cgroups(&self.config.hostname){
+            log::error!("Cgroups cleaning failed: {}", e);
+            return Err(e);
         }
         log::debug!("Container Cleaned");
         Ok(())
