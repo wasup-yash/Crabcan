@@ -4,13 +4,13 @@ use crate::config::Containeropts;
 use crate::error::Ourerror;
 use crate::mount::clean_mounts;
 use crate::namespace::handle_child_uid_mp;
+use crate::resources::clean_cgroups;
+use crate::resources::restrict_resources;
 use nix::sys::utsname::uname;
 use nix::sys::wait::waitpid;
 use nix::unistd::close;
 use nix::unistd::Pid;
 use std::os::unix::io::RawFd;
-use crate::resources::restrict_resources;
-use crate::resources::clean_cgroups;
 #[allow(dead_code)]
 pub struct Container {
     config: Containeropts,
@@ -47,7 +47,7 @@ impl Container {
             log::error!("Unable to close read sockets: {:?} ", e);
             return Err(Ourerror::SocketError(4));
         }
-        if let Err(e) = clean_cgroups(&self.config.hostname){
+        if let Err(e) = clean_cgroups(&self.config.hostname) {
             log::error!("Cgroups cleaning failed: {}", e);
             return Err(e);
         }
