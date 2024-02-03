@@ -9,7 +9,9 @@ use nix::sched::clone;
 use nix::sched::CloneFlags;
 use nix::sys::signal::Signal;
 use nix::unistd::close;
+use nix::unistd::execve;
 use nix::unistd::Pid;
+use std::ffi::CString;
 
 fn child(config: Containeropts) -> isize {
     match set_container_configuration(&config) {
@@ -28,7 +30,14 @@ fn child(config: Containeropts) -> isize {
         config.path.to_str().unwrap(),
         config.argv
     );
-    return 0;
+    let retcode = match execve::<CString, CString>(&config.path, &config.argv, &[]) {
+        Ok(_) => 0,
+        Err(e) => {
+            log::error!("Error while trying to perform execve: {:?}", e);
+            return -1;
+        }
+    };
+    retcode
 }
 const STACK_SIZE: usize = 1024 * 1024;
 pub fn generate_child_process(config: Containeropts) -> Result<Pid, Ourerror> {
